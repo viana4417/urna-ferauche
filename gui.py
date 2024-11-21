@@ -75,3 +75,30 @@ class UrnaEletronicaGUI:
             self.eleitor_info.config(text=f"Dados do Eleitor:\n{eleitor}")
         else:
             messagebox.showerror("Erro", "Eleitor não encontrado.")
+
+    def votar(self):
+        if self.urna is None:
+            messagebox.showerror("Erro", "Os dados da urna ainda não foram carregados. Clique em 'Carregar Dados'.")
+            return
+
+        titulo = self.titulo_entry.get()
+        numero_candidato = self.candidato_entry.get()
+
+        if not titulo.isdigit():
+            messagebox.showerror("Erro", "Título do eleitor deve ser um número.")
+            return
+
+        eleitor = self.urna.get_eleitor(int(titulo))
+        if not eleitor:
+            messagebox.showerror("Erro", "Eleitor não encontrado.")
+            return
+
+        if not numero_candidato.isdigit():
+            messagebox.showerror("Erro", "Número do candidato deve ser um número.")
+            return
+
+        n_cand = int(numero_candidato)
+        self.urna.registrar_voto(eleitor, n_cand)
+        self.atualizar_arquivo_votos()
+        messagebox.showinfo("Voto", "Voto registrado com sucesso!")
+        self.limpar_campos()
