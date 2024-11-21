@@ -133,3 +133,23 @@ class UrnaEletronicaGUI:
         self.atualizar_arquivo_votos()
         messagebox.showinfo("Voto", f"Voto {tipo.lower()} registrado com sucesso!")
         self.limpar_campos()
+
+    def atualizar_arquivo_votos(self):
+        with open("votos.pkl", "wb") as file:
+            pickle.dump(self.urna._Urna__votos, file)
+
+    def limpar_campos(self):
+        self.titulo_entry.delete(0, tk.END)
+        self.candidato_entry.delete(0, tk.END)
+        self.eleitor_info.config(text="Dados do Eleitor: ")
+
+    def listar_eleitores(self):
+        if not self.eleitores:
+            messagebox.showerror("Erro", "Nenhum dado carregado.")
+            return
+
+        eleitores_str = "Eleitores Disponíveis:\n"
+        for eleitor in self.eleitores:
+            eleitores_str += f"Título: {eleitor.get_titulo()} - Nome: {eleitor.get_nome()}\n"
+
+        messagebox.showinfo("Eleitores", eleitores_str)
