@@ -42,3 +42,36 @@ class UrnaEletronicaGUI:
 
         self.listar_eleitores_button = tk.Button(master, text="Listar Eleitores", command=self.listar_eleitores)
         self.listar_eleitores_button.grid(row=5, column=0, columnspan=3, padx=10, pady=10)
+
+    def carregar_dados(self):
+        try:
+            with open("candidatos.pkl", "rb") as cand_file:
+                self.candidatos = pickle.load(cand_file)
+            with open("eleitores.pkl", "rb") as ele_file:
+                self.eleitores = pickle.load(ele_file)
+
+            mesario = Eleitor("Mesário", "00000000", "000000000-0", 99999999, 252, 54)
+            self.urna = Urna(mesario, 252, 54, self.candidatos, self.eleitores)
+            messagebox.showinfo("Carregar Dados", "Dados carregados com sucesso!")
+        except FileNotFoundError:
+            self.urna = None
+            messagebox.showerror("Erro", "Arquivos de candidatos ou eleitores não encontrados.")
+        except Exception as e:
+            self.urna = None
+            messagebox.showerror("Erro", f"Erro ao carregar dados: {e}")
+
+    def buscar_eleitor(self):
+        if self.urna is None:
+            messagebox.showerror("Erro", "Os dados da urna ainda não foram carregados. Clique em 'Carregar Dados'.")
+            return
+
+        titulo = self.titulo_entry.get()
+        if not titulo.isdigit():
+            messagebox.showerror("Erro", "Título do eleitor deve ser um número.")
+            return
+
+        eleitor = self.urna.get_eleitor(int(titulo))
+        if eleitor:
+            self.eleitor_info.config(text=f"Dados do Eleitor:\n{eleitor}")
+        else:
+            messagebox.showerror("Erro", "Eleitor não encontrado.")
