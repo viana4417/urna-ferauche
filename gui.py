@@ -102,3 +102,34 @@ class UrnaEletronicaGUI:
         self.atualizar_arquivo_votos()
         messagebox.showinfo("Voto", "Voto registrado com sucesso!")
         self.limpar_campos()
+
+    def voto_branco(self):
+        self.registrar_voto_especial("BRANCO")
+
+    def voto_nulo(self):
+        self.registrar_voto_especial("NULO")
+
+    def registrar_voto_especial(self, tipo):
+        if self.urna is None:
+            messagebox.showerror("Erro", "Os dados da urna ainda não foram carregados. Clique em 'Carregar Dados'.")
+            return
+
+        titulo = self.titulo_entry.get()
+
+        if not titulo.isdigit():
+            messagebox.showerror("Erro", "Título do eleitor deve ser um número.")
+            return
+
+        eleitor = self.urna.get_eleitor(int(titulo))
+        if not eleitor:
+            messagebox.showerror("Erro", "Eleitor não encontrado.")
+            return
+
+        if tipo == "BRANCO":
+            self.urna.registrar_voto(eleitor, 0)
+        elif tipo == "NULO":
+            self.urna.registrar_voto(eleitor, -1)
+
+        self.atualizar_arquivo_votos()
+        messagebox.showinfo("Voto", f"Voto {tipo.lower()} registrado com sucesso!")
+        self.limpar_campos()
