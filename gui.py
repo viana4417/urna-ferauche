@@ -4,6 +4,7 @@ from tkinter import messagebox
 import pickle
 from eleicao import Eleitor, Urna
 
+#Gabriel Viana
 class UrnaEletronicaGUI:
     def __init__(self, master):
         self.master = master
@@ -57,7 +58,7 @@ class UrnaEletronicaGUI:
         self.create_teclado_numerico()
         self.create_buttons_acao()
 
-
+#Ricardo Nucci
     def create_teclado_numerico(self):
         botoes = [
             ('1', 0, 0), ('2', 0, 1), ('3', 0, 2),
@@ -82,7 +83,7 @@ class UrnaEletronicaGUI:
             eleitores_str += f"Título: {eleitor.get_titulo()} - Nome: {eleitor.get_nome()}\n"
 
         messagebox.showinfo("Eleitores", eleitores_str)
-
+#Daniel Perfetti
     def buscar_eleitor(self):
         if self.urna is None:
             messagebox.showerror("Erro", "Os dados da urna ainda não foram carregados.")
@@ -106,3 +107,22 @@ class UrnaEletronicaGUI:
             self.eleitor_atual = None
             messagebox.showerror("Erro", "Eleitor não encontrado.")
         self.display.delete(0, END)
+#Rafael do Nascimento Maia
+    def create_buttons_acao(self):
+        Button(self.urna_teclado, text='BRANCO', font=("Arial", 12, "bold"), bg='white', fg='black',
+            command=lambda: self.registrar_voto_especial('BRANCO')).place(relx=0.02, rely=0.7, relwidth=0.29, relheight=0.1)
+        
+        Button(self.urna_teclado, text='CORRIGE', font=("Arial", 12, "bold"), bg='#FF4500', fg='white',
+            command=self.corrige).place(relx=0.34, rely=0.7, relwidth=0.29, relheight=0.1)
+        
+        Button(self.urna_teclado, text='CONFIRMA', font=("Arial", 12, "bold"), bg='#3CB371', fg='white',
+            command=self.confirmar_voto).place(relx=0.66, rely=0.7, relwidth=0.33, relheight=0.1)
+
+        Button(self.urna_teclado, text='LISTAR ELEITORES', font=("Arial", 10, "bold"), bg='#1E90FF', fg='white',
+            command=self.listar_eleitores).place(relx=0.02, rely=0.82, relwidth=0.96, relheight=0.08)
+
+        Button(self.urna_teclado, text='SELECIONAR ELEITOR', font=("Arial", 10, "bold"), bg='#32CD32', fg='white',
+            command=self.buscar_eleitor).place(relx=0.02, rely=0.91, relwidth=0.96, relheight=0.08)
+
+    def add_to_display(self, value):
+        self.display.insert(END, value)
