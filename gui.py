@@ -34,3 +34,7 @@ class UrnaEletronicaGUI:
             messagebox.showerror("Erro", "Arquivos de candidatos ou eleitores não encontrados.")
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao carregar dados: {e}")
+
+    def create_interface(self):
+        self.urna_frame = Frame(self.master, bd=4, bg='#D3D3D3', highlightbackground='#759fe6', highlightthickness=3)
+        self.urna_frame.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.9)
