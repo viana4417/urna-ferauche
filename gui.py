@@ -157,3 +157,42 @@ class UrnaEletronicaGUI:
             messagebox.showerror("Erro", "Número inválido!")
         except Exception as e:
             messagebox.showerror("Erro", str(e))
+            
+#Manuella Nascimento
+    def registrar_voto_especial(self, tipo):
+        if not self.eleitor_atual:
+            messagebox.showerror("Erro", "Nenhum eleitor foi selecionado.")
+            return
+
+        try:
+            if tipo == "BRANCO":
+                self.urna.registrar_voto(self.eleitor_atual, 0)
+            elif tipo == "NULO":
+                self.urna.registrar_voto(self.eleitor_atual, -1)
+
+            self.salvar_votos()
+
+            messagebox.showinfo("Sucesso", f"Voto {tipo.lower()} registrado com sucesso!")
+
+            self.eleitor_atual = None
+            self.info_label.config(text="Nenhum eleitor selecionado.")
+            self.candidatos_label.config(text="")
+
+            self.display.delete(0, END)
+        except Exception as e:
+            messagebox.showerror("Erro", str(e))
+
+    def update_side_window(self, eleitor):
+        self.info_label.config(text=f"Eleitor: {eleitor.get_nome()}\nTítulo: {eleitor.get_titulo()}")
+        self.candidatos_label.config(
+            text="Escolha o candidato a votar:\n" + "\n".join([f"{c.get_numero()} - {c.get_nome()}" for c in self.candidatos])
+        )
+    
+    def salvar_votos(self):
+        with open("votos.pkl", "wb") as arquivo:
+            pickle.dump(self.urna._Urna__votos, arquivo)
+
+        with open("votos.txt", "w") as arquivo_txt:
+            arquivo_txt.write("Resultado da Votação:\n")
+            for candidato, votos in self.urna._Urna__votos.items():
+                arquivo_txt.write(f"{candidato}: {votos} votos\n")
