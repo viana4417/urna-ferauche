@@ -65,3 +65,44 @@ class UrnaEletronicaGUI:
             ('7', 2, 0), ('8', 2, 1), ('9', 2, 2),
             ('0', 3, 1),
         ]
+
+        for texto, linha, coluna in botoes:
+            Button(self.urna_teclado, text=texto, font=("Arial", 10, "bold"), bg="#000000", fg="#FFFFFF",
+                command=lambda t=texto: self.add_to_display(t)).place(
+                relx=0.05 + coluna * 0.3, rely=0.1 + linha * 0.15, relwidth=0.25, relheight=0.1
+            )
+
+    def listar_eleitores(self):
+        if not self.eleitores:
+            messagebox.showerror("Erro", "Nenhum dado carregado.")
+            return
+
+        eleitores_str = "Eleitores Disponíveis:\n"
+        for eleitor in self.eleitores:
+            eleitores_str += f"Título: {eleitor.get_titulo()} - Nome: {eleitor.get_nome()}\n"
+
+        messagebox.showinfo("Eleitores", eleitores_str)
+
+    def buscar_eleitor(self):
+        if self.urna is None:
+            messagebox.showerror("Erro", "Os dados da urna ainda não foram carregados.")
+            return
+
+        titulo = self.display.get()
+        if not titulo.isdigit():
+            messagebox.showerror("Erro", "Título do eleitor deve ser um número.")
+            return
+
+        eleitor = self.urna.get_eleitor(int(titulo))
+        if eleitor:
+            if eleitor.ja_votou:
+                messagebox.showerror("Erro", "Este eleitor já votou.")
+                self.eleitor_atual = None
+                self.info_label.config(text="Nenhum eleitor selecionado.")
+            else:
+                self.eleitor_atual = eleitor
+                self.update_side_window(eleitor)
+        else:
+            self.eleitor_atual = None
+            messagebox.showerror("Erro", "Eleitor não encontrado.")
+        self.display.delete(0, END)
