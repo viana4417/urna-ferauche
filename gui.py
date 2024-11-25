@@ -107,6 +107,7 @@ class UrnaEletronicaGUI:
             self.eleitor_atual = None
             messagebox.showerror("Erro", "Eleitor não encontrado.")
         self.display.delete(0, END)
+
 #Rafael do Nascimento Maia
     def create_buttons_acao(self):
         Button(self.urna_teclado, text='BRANCO', font=("Arial", 12, "bold"), bg='white', fg='black',
@@ -124,5 +125,35 @@ class UrnaEletronicaGUI:
         Button(self.urna_teclado, text='SELECIONAR ELEITOR', font=("Arial", 10, "bold"), bg='#32CD32', fg='white',
             command=self.buscar_eleitor).place(relx=0.02, rely=0.91, relwidth=0.96, relheight=0.08)
 
+#Caique Tavares
     def add_to_display(self, value):
         self.display.insert(END, value)
+
+    def corrige(self):
+        self.display.delete(0, END)
+
+    def voto_branco(self):
+        self.registrar_voto_especial(0)
+
+    def confirmar_voto(self):
+        if not self.eleitor_atual:
+            messagebox.showerror("Erro", "Nenhum eleitor foi selecionado.")
+            return
+
+        try:
+            numero_candidato = int(self.display.get())
+            self.urna.registrar_voto(self.eleitor_atual, numero_candidato)
+
+            self.salvar_votos()
+
+            messagebox.showinfo("Sucesso", "Voto registrado com sucesso!")
+
+            self.eleitor_atual = None
+            self.info_label.config(text="Nenhum eleitor selecionado.")
+            self.candidatos_label.config(text="")
+
+            self.display.delete(0, END)
+        except ValueError:
+            messagebox.showerror("Erro", "Número inválido!")
+        except Exception as e:
+            messagebox.showerror("Erro", str(e))
