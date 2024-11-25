@@ -38,3 +38,30 @@ class UrnaEletronicaGUI:
     def create_interface(self):
         self.urna_frame = Frame(self.master, bd=4, bg='#D3D3D3', highlightbackground='#759fe6', highlightthickness=3)
         self.urna_frame.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.9)
+
+        self.urna_info = Frame(self.urna_frame, bd=4, bg='#808080')
+        self.urna_info.place(relx=0.02, rely=0.05, relwidth=0.5, relheight=0.9)
+
+        self.urna_teclado = Frame(self.urna_frame, bd=4, bg='#1C1C1C')
+        self.urna_teclado.place(relx=0.55, rely=0.05, relwidth=0.43, relheight=0.9)
+
+        self.display = Entry(self.urna_info, font=("Helvetica", 18), justify="center", bg="black", fg="white", insertbackground="white")
+        self.display.pack(pady=10)
+
+        self.info_label = Label(self.urna_info, text="Digite o título do eleitor", font=("Helvetica", 12), bg="#808080", fg="white")
+        self.info_label.pack(pady=10)
+
+        self.candidatos_label = Label(self.urna_info, text="", font=("Helvetica", 12), bg="#808080", fg="white", wraplength=200, justify="center")
+        self.candidatos_label.pack(pady=10)
+
+        self.create_teclado_numerico()
+        self.create_buttons_acao()
+
+
+    def create_teclado_numerico(self):
+        botoes = [
+            ('1', 0, 0), ('2', 0, 1), ('3', 0, 2),
+            ('4', 1, 0), ('5', 1, 1), ('6', 1, 2),
+            ('7', 2, 0), ('8', 2, 1), ('9', 2, 2),
+            ('0', 3, 1),
+        ]
