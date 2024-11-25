@@ -27,29 +27,30 @@ class Pessoa(ABC):
     def assinatura_eletronica(self):
         pass
 
-class Eleitor(Pessoa):
-    __titulo : int
-    secao : int
-    zona : int
-
-    def __init__(self, nome, RG, CPF, titulo, secao, zona):
-        super().__init__(nome, RG, CPF)
-        self.__titulo = titulo
-        self.secao = secao
+class Eleitor:
+    def __init__(self, nome, RG, cpf, titulo, secao, zona):
+        self.nome = nome
+        self.titulo = titulo
+        self.cpf = cpf
         self.zona = zona
+        self.secao = secao
+        self.ja_votou = False
 
     def __str__(self):
-        info = super().__str__()
-        info += (f'Titulo: {self.__titulo}\n'
-                 f'Seção: {self.secao}\n'
-                 f'Zona: {self.zona}\n')
-        return info
+        return (f"Nome: {self.nome}\n"
+                f"Título: {self.titulo}\n"
+                f"Seção: {self.secao}\n"
+                f"Zona: {self.zona}\n")
 
     def __repr__(self):
-        return f"Eleitor({super().__repr__()}, titulo='{self.__titulo}', secao='{self.secao}', zona='{self.zona}')"
+        return (f"Eleitor(nome='{self.nome}', titulo='{self.titulo}', cpf='{self.cpf}', "
+                f"zona={self.zona}, secao={self.secao}, ja_votou={self.ja_votou})")
 
     def get_titulo(self):
-        return self.__titulo
+        return self.titulo
+
+    def get_nome(self):
+        return self.nome
 
     def assinatura_eletronica(self):
         dados_para_hash = self.__str__()

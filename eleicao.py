@@ -34,17 +34,25 @@ class Urna(Transparencia):
                 return eleitor
         return False
 
-    def registrar_voto(self, eleitor: Eleitor, n_cand: int):
-        self.__eleitores_presentes.append(eleitor)
-        if n_cand in self.__votos:
-            self.__votos[n_cand] += 1
-        elif n_cand == 0:
-            self.__votos["BRANCO"] += 1
+    def registrar_voto(self, eleitor, numero_candidato):
+        if eleitor.ja_votou:
+            raise Exception("Este eleitor já votou.")
+        
+        if numero_candidato == 0:
+            self.__votos['BRANCO'] += 1
+        elif numero_candidato == -1:
+            self.__votos['NULO'] += 1
         else:
-            self.__votos["NULO"] += 1
-
-        self.salvar_votos_txt()
-
+            candidato_encontrado = False
+            for candidato in self._Urna__candidatos:
+                if candidato.get_numero() == numero_candidato:
+                    self.__votos[numero_candidato] += 1
+                    candidato_encontrado = True
+                    break
+            if not candidato_encontrado:
+                self.__votos['NULO'] += 1
+        
+        eleitor.ja_votou = True
 
     def __str__(self):
         data_atual = date.today()
@@ -76,5 +84,3 @@ class Urna(Transparencia):
             arquivo_txt.write("Resultado da Votação:\n")
             for candidato, votos in self.__votos.items():
                 arquivo_txt.write(f"{candidato}: {votos} votos\n")
-
-
